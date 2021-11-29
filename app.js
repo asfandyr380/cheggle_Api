@@ -11,6 +11,7 @@ const Role = db.role;
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
 app.use(cors({ origin: "*" }));
 
