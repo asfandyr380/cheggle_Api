@@ -25,6 +25,12 @@ const User = mongoose.model(
     post: Number,
     follower: Number,
     photo: String,
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+      }
+    ],
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -2,9 +2,12 @@ const config = require("../../config/auth.config");
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
+const Token = db.token;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+const crypto = require("crypto");
+const userRoute = require("../Routes/user.route");
 
 exports.signup = (req, res) => {
     const user = new User({
@@ -25,6 +28,7 @@ exports.signup = (req, res) => {
         district: req.body.district,
         country: req.body.country,
         email: req.body.email,
+        wishlist: [],
         photo: '2021-11-29T09-31-26.681Z66906f43adefb3bc553f7601fa7c1ed9--city-logo-manchester-city.jpeg',
         password: bcrypt.hashSync(req.body.password, 8),
         feedback: 0.0,
@@ -123,6 +127,8 @@ exports.signin = (req, res) => {
                     success: true,
                     data: {
                         id: user._id,
+                        firstname: user.firstname,
+                        lastname: user.lastname,
                         email: user.email,
                         roles: authorities,
                         full_name: user.firstname + user.lastname,
@@ -130,7 +136,7 @@ exports.signin = (req, res) => {
                         photo: user.photo,
                         url: user.website,
                         level: "Developer",
-                        description: user.street,
+                        street: user.street,
                         tag: user.city,
                         rate: 5.2,
                         token: token
@@ -138,4 +144,19 @@ exports.signin = (req, res) => {
                     message: 'Login Success'
                 });
         });
+};
+
+
+exports.requestReset = async (req, res) => {
+    const email = req.body.email;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+        res.status(404).json({ success: false, message: "No User Found against that email" });
+    }
+    let token = await Token.findOne({ userId: user._id });
+    if (token) await token.deleteOne();
+
+    let resetToken = crypto.randomBytes(32).toString("hex");
+
 };

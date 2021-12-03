@@ -1,4 +1,3 @@
-const config = require("../../config/auth.config");
 const db = require("../models");
 const User = db.user;
 var bcrypt = require("bcryptjs");
@@ -23,6 +22,8 @@ exports.getUser = (req, res) => {
           user: {
             id: data._id,
             email: data.email,
+            firstname: data.firstname,
+            lastname: data.lastname,
             // roles: authorities,
             full_name: `${data.firstname} ${data.lastname}`,
             nickname: data.lastname,
@@ -31,7 +32,7 @@ exports.getUser = (req, res) => {
             photo: data.photo,
             url: data.website,
             level: "Developer",
-            description: data.street,
+            street: data.street,
             tag: data.city,
             rate: 5.2,
           },
@@ -118,6 +119,23 @@ exports.changePass = (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error updating User with id=" + id
+    });
+  });
+};
+
+
+exports.getWishlist = (req, res) => {
+  const id = req.params.id;
+  User.findById(id)
+  .populate('wishlist')
+  .exec((err, data) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: "Something is Wrong try again" });
+      return;
+    }
+    res.status(200).json({
+      success: true, data: data['wishlist'], message: "Success"
     });
   });
 };

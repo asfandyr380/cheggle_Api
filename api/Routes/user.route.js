@@ -50,6 +50,8 @@ module.exports = function (app) {
         controller.moderatorBoard
     );
 
+    app.get('/api/user/wishlist/:id', controller.getWishlist);
+
     app.get(
         "/api/admin/admin",
         [authJwt.verifyToken, authJwt.isAdmin],
