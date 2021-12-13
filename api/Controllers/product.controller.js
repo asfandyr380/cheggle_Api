@@ -68,7 +68,6 @@ exports.getProduct = (req, res) => {
         });
 };
 
-
 exports.getRecent = (req, res) => {
     Product.find()
         .populate("auther", "-__v")

@@ -29,7 +29,7 @@ exports.signup = (req, res) => {
         country: req.body.country,
         email: req.body.email,
         wishlist: [],
-        photo: '2021-11-29T09-31-26.681Z66906f43adefb3bc553f7601fa7c1ed9--city-logo-manchester-city.jpeg',
+        photo: 'user_icon.png',
         password: bcrypt.hashSync(req.body.password, 8),
         feedback: 0.0,
         post: 0,

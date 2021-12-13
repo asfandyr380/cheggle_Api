@@ -51,7 +51,7 @@ module.exports = function (app) {
     );
 
     app.get('/api/user/wishlist/:id', controller.getWishlist);
-
+    app.post('/api/user/wishlist/add', controller.addToWishlist);
     app.get(
         "/api/admin/admin",
         [authJwt.verifyToken, authJwt.isAdmin],

@@ -124,20 +124,32 @@ exports.changePass = (req, res) => {
 };
 
 
+exports.addToWishlist = (req, res) => {
+  const id = req.body.id;
+  const productId = req.body.productId;
+  User.findByIdAndUpdate(id, { $push: { wishlist: productId } }).exec((err, result) => {
+    if (err) {
+      res.status(500).json({ success: false, message: "Something went Wrong" });
+      return;
+    }
+    res.json({ success: true, data: result, message: "Success" });
+  });
+};
+
 exports.getWishlist = (req, res) => {
   const id = req.params.id;
   User.findById(id)
-  .populate('wishlist')
-  .exec((err, data) => {
-    if (err) {
-      console.log(err);
-      res.status(500).json({ success: false, message: "Something is Wrong try again" });
-      return;
-    }
-    res.status(200).json({
-      success: true, data: data['wishlist'], message: "Success"
+    .populate('wishlist')
+    .exec((err, data) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ success: false, message: "Something is Wrong try again" });
+        return;
+      }
+      res.status(200).json({
+        success: true, data: data['wishlist'], message: "Success"
+      });
     });
-  });
 };
 
 exports.adminBoard = (req, res) => {
