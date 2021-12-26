@@ -21,9 +21,6 @@ const User = mongoose.model(
     city: String,
     district: String,
     country: String,
-    feedback: Number,
-    post: Number,
-    follower: Number,
     photo: String,
     wishlist: [
       {
@@ -36,7 +33,16 @@ const User = mongoose.model(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Role"
       }
-    ]
+    ],
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Reviews"
+      }
+    ],
+    services: [{type: String}],
+    aboutUs: String,
+    partners: [{type: String}],
   })
 );
 

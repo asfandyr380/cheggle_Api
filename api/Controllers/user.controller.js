@@ -1,5 +1,6 @@
 const db = require("../models");
 const User = db.user;
+const Role = db.role;
 var bcrypt = require("bcryptjs");
 
 exports.allAccess = (req, res) => {
@@ -8,55 +9,79 @@ exports.allAccess = (req, res) => {
 
 exports.getUser = (req, res) => {
   const id = req.params.id;
-  User.findById(id).then(data => {
-    if (!data) {
-      res.status(404).json({ success: false, data: null, message: "No User Found!" });
-    } else {
-      // var authorities = [];
+  User.findById(id)
+    .populate("roles", "-__v")
+    .populate("reviews", "-__v")
+    .populate({
+      path: 'reviews', populate: {
+        path: 'user',
+        model: 'User'
+      }
+    })
+    .exec((err, data) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ success: false, data: null, message: "Something Went Wrong try again" });
+        return;
+      }
 
-      // for (let i = 0; i < data.roles.length; i++) {
-      //   authorities.push("ROLE_" + data.roles[i].name);
-      // }
-      res.status(200).json({
-        success: true, data: {
-          user: {
-            id: data._id,
-            email: data.email,
-            firstname: data.firstname,
-            lastname: data.lastname,
-            // roles: authorities,
-            full_name: `${data.firstname} ${data.lastname}`,
-            nickname: data.lastname,
-            firstName: data.firstname,
-            lastName: data.lastname,
-            photo: data.photo,
-            url: data.website,
-            level: "Developer",
-            street: data.street,
-            tag: data.city,
-            rate: 5.2,
-          },
-          value: [
-            {
-              "title": "feedback",
-              "value": `${data.feedback}%`
+      if (!data) {
+        res.status(404).json({ success: false, data: null, message: "No User Found!" });
+      } else {
+        var authorities = [];
+        var reviews = [];
+        for (let i = 0; i < data.roles.length; i++) {
+          authorities.push("ROLE_" + data.roles[i].name);
+        }
+
+        for (let i = 0; i < data.reviews.length; i++) {
+          var user = {
+            id: data.reviews[i].user.id,
+            full_name: `${data.reviews[i].user.firstname} ` + `${data.reviews[i].user.lastname}`,
+            photo: data.reviews[i].user.photo,
+          };
+          var review = {
+            id: data.reviews[i]._id, user:
+              user, title: data.reviews[i].title,
+            comment: data.reviews[i].comment,
+            created_date: data.reviews[i].created_date,
+            rate: data.reviews[i].rate,
+          };
+          reviews.push(review);
+        }
+
+        res.status(200).json({
+          success: true, data: {
+            user: {
+              id: data._id,
+              person: data.person,
+              firstname: data.firstname,
+              lastname: data.lastname,
+              phone: data.phone,
+              fax: data.fax,
+              mobile: data.mobile,
+              website: data.website,
+              email: data.email,
+              company: data.companyName,
+              b1: data.b1,
+              b2: data.b2,
+              address: `${data.street} ` + `${data.house}`,
+              postal: data.postal,
+              city: data.city,
+              ditrict: data.district,
+              country: data.country,
+              photo: data.photo,
+              roles: authorities,
+              full_name: `${data.firstname} ` + `${data.lastname}`,
+              reviews: reviews,
+              services: data.services,
+              aboutUs: data.aboutUs,
+              partners: data.partners,
             },
-            {
-              "title": "post",
-              "value": `${data.post}`
-            },
-            {
-              "title": "follower",
-              "value": `${data.follower}`
-            }
-          ],
-        }, message: "Found User Success"
-      });
-    }
-  }).catch(err => {
-    console.log(err);
-    res.status(500).json({ success: false, data: null, message: "Something Went Wrong try again" });
-  });
+          }, message: "Found User Success"
+        });
+      }
+    });
 };
 
 
@@ -150,6 +175,46 @@ exports.getWishlist = (req, res) => {
         success: true, data: data['wishlist'], message: "Success"
       });
     });
+};
+
+
+
+exports.addRole = (req, res) => {
+  const id = req.params.id;
+
+  Role.find(
+    {
+      name: req.body.role
+    },
+    (err, roles) => {
+
+      if (err) {
+        res.status(500).json({ success: false, message: err });
+        return;
+      }
+
+      User.findByIdAndUpdate(id, { $push: { roles: roles[0]._id } }).exec((err, result) => {
+        if (err) {
+          res.status(500).json({ success: false, message: "Something went Wrong" });
+          return;
+        }
+        res.json({ success: true, data: result, message: "Success" });
+      });
+    }
+  );
+
+};
+
+
+exports.updateProfileSetup = (req, res) => {
+  const body = req.body;
+  const id = req.params.id;
+  User.findByIdAndUpdate(id, {services: body.services, aboutUs: body.aboutUs, partners: body.partners}).exec((err, data) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: err });
+    }
+    return res.json({ success: true, message: "success" });
+  });
 };
 
 exports.adminBoard = (req, res) => {

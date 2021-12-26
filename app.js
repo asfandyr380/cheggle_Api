@@ -19,6 +19,7 @@ app.use(cors({ origin: "*" }));
 require('./api/Routes/auth.route')(app);
 require('./api/Routes/user.route')(app);
 require('./api/Routes/product.route')(app);
+require('./api/Routes/partners.route')(app);
 
 db.mongoose
     .connect(`mongodb+srv://${dbConfig.USERNAME}:${dbConfig.PASS}@cheggle.jldec.mongodb.net/${dbConfig.DB}?retryWrites=true&w=majority`, {
@@ -119,7 +120,7 @@ function initial() {
                 if (err) {
                     console.log("error", err);
                 }
-                console.log("added 'moderator' to roles collection");
+                console.log("added 'premium' to roles collection");
             });
 
             new Role({

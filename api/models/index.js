@@ -10,6 +10,8 @@ db.role = require("./role.model");
 db.product = require('./product.model');
 db.services = require('./services.model');
 db.token = require('./reser_token.model');
+db.reviews = require('./reviews.model');
+db.partners = require('./partners.model');
 
 
 db.ROLES = ["user", "admin", "moderator"];

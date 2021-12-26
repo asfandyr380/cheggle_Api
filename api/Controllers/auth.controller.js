@@ -31,9 +31,10 @@ exports.signup = (req, res) => {
         wishlist: [],
         photo: 'user_icon.png',
         password: bcrypt.hashSync(req.body.password, 8),
-        feedback: 0.0,
-        post: 0,
-        follower: 0,
+        reviews: [],
+        services: [],
+        aboutUs: "",
+        partners: [],
     });
 
     user.save((err, user) => {
@@ -60,7 +61,7 @@ exports.signup = (req, res) => {
                             return;
                         }
 
-                        res.json({ success: true, message: "User was registered successfully!" });
+                        res.json({ success: true, id: user._id, message: "User was registered successfully!" });
                     });
                 }
             );
@@ -74,11 +75,11 @@ exports.signup = (req, res) => {
                 user.roles = [role._id];
                 user.save(err => {
                     if (err) {
-                        res.status(500).json({ success: true, message: err });
+                        res.status(500).json({ success: false, message: err });
                         return;
                     }
 
-                    res.json({ success: true, message: "User was registered successfully!" });
+                    res.json({ success: true, id: user._id, message: "User was registered successfully!" });
                 });
             });
         }
@@ -92,7 +93,7 @@ exports.signin = (req, res) => {
         .populate("roles", "-__v")
         .exec((err, user) => {
             if (err) {
-                res.status(500).send({ message: err });
+                res.status(500).send({ success: false, message: err });
                 return;
             }
 
@@ -127,18 +128,25 @@ exports.signin = (req, res) => {
                     success: true,
                     data: {
                         id: user._id,
+                        person: user.person,
                         firstname: user.firstname,
                         lastname: user.lastname,
+                        phone: user.phone,
+                        fax: user.fax,
+                        mobile: user.mobile,
+                        website: user.website,
                         email: user.email,
+                        company: user.companyName,
+                        b1: user.b1,
+                        b2: user.b2,
+                        address: user.street + user.house,
+                        postal: user.postal,
+                        city: user.city,
+                        ditrict: user.district,
+                        country: user.country,
+                        photo: user.photo,
                         roles: authorities,
                         full_name: user.firstname + user.lastname,
-                        nickname: user.lastname,
-                        photo: user.photo,
-                        url: user.website,
-                        level: "Developer",
-                        street: user.street,
-                        tag: user.city,
-                        rate: 5.2,
                         token: token
                     },
                     message: 'Login Success'

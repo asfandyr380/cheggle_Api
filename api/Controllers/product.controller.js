@@ -44,7 +44,6 @@ exports.getPopuler = (req, res) => {
                 res.status(500).json({ success: false, message: "Something is Wrong try again" });
                 return;
             }
-
             res.status(200).json({
                 success: true, data: data, message: "Success"
             });

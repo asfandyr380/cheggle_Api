@@ -44,17 +44,11 @@ module.exports = function (app) {
 
     app.get("/api/user/:id", controller.getUser);
 
-    app.get(
-        "/api/mode/mod",
-        [authJwt.verifyToken, authJwt.isModerator],
-        controller.moderatorBoard
-    );
-
     app.get('/api/user/wishlist/:id', controller.getWishlist);
+
     app.post('/api/user/wishlist/add', controller.addToWishlist);
-    app.get(
-        "/api/admin/admin",
-        [authJwt.verifyToken, authJwt.isAdmin],
-        controller.adminBoard
-    );
+
+    app.post('/api/user/role/add/:id', controller.addRole);
+
+    app.post('/api/user/update/setup/:id', controller.updateProfileSetup);
 };
