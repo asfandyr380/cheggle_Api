@@ -12,6 +12,7 @@ db.services = require('./services.model');
 db.token = require('./reser_token.model');
 db.reviews = require('./reviews.model');
 db.partners = require('./partners.model');
+db.banners = require('./banners.model');
 
 
 db.ROLES = ["user", "admin", "moderator"];

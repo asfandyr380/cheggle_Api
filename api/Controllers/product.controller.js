@@ -88,7 +88,8 @@ exports.getRecent = (req, res) => {
 
 
 exports.getTrending_hot = (req, res) => {
-    Product.find({ rate: { $gt: 4 } })
+    Product.find()
+        .where('rate').gt(4)
         .populate("auther", "-__v")
         .populate('service', "-__v")
         .limit(15)
