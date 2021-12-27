@@ -35,6 +35,10 @@ exports.signup = (req, res) => {
         services: [],
         aboutUs: "",
         partners: [],
+        facebook: "",
+        twitter: "",
+        instagram: "",
+        linkdin: "",
     });
 
     user.save((err, user) => {
@@ -147,6 +151,10 @@ exports.signin = (req, res) => {
                         photo: user.photo,
                         roles: authorities,
                         full_name: user.firstname + user.lastname,
+                        facebook: user.facebook,
+                        twitter: user.twitter,
+                        instagram: user.instagram,
+                        linkdin: user.linkdin,
                         token: token
                     },
                     message: 'Login Success'

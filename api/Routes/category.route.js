@@ -11,6 +11,7 @@ module.exports = function (app) {
     });
 
     app.get('/api/categories', controller.getCategories);
+    app.get('/api/categories/recommended', controller.getRecommended_Cate);
     app.post('/api/categories/create', controller.create);
    
 };

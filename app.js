@@ -22,6 +22,7 @@ require('./api/Routes/product.route')(app);
 require('./api/Routes/partners.route')(app);
 require('./api/Routes/banners.route')(app);
 require('./api/Routes/category.route')(app);
+require('./api/Routes/reviews.route')(app);
 
 db.mongoose
     .connect(`mongodb+srv://${dbConfig.USERNAME}:${dbConfig.PASS}@cheggle.jldec.mongodb.net/${dbConfig.DB}?retryWrites=true&w=majority`, {

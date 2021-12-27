@@ -77,6 +77,10 @@ exports.getUser = (req, res) => {
               services: data.services,
               aboutUs: data.aboutUs,
               partners: data.partners,
+              facebook: data.facebook,
+              twitter: data.twitter,
+              instagram: data.instagram,
+              linkdin: data.linkdin,
             },
           }, message: "Found User Success"
         });
@@ -209,7 +213,7 @@ exports.addRole = (req, res) => {
 exports.updateProfileSetup = (req, res) => {
   const body = req.body;
   const id = req.params.id;
-  User.findByIdAndUpdate(id, {services: body.services, aboutUs: body.aboutUs, partners: body.partners}).exec((err, data) => {
+  User.findByIdAndUpdate(id, { services: body.services, aboutUs: body.aboutUs, partners: body.partners }).exec((err, data) => {
     if (err) {
       return res.status(500).json({ success: false, message: err });
     }

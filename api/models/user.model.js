@@ -40,9 +40,13 @@ const User = mongoose.model(
         ref: "Reviews"
       }
     ],
-    services: [{type: String}],
+    services: [{ type: String }],
     aboutUs: String,
-    partners: [{type: String}],
+    partners: [{ type: String }],
+    facebook: String,
+    twitter: String,
+    instagram: String,
+    linkdin: String
   })
 );
 

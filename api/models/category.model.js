@@ -7,6 +7,7 @@ const Categories = mongoose.model(
         icon: String,
         color: String,
         type: String,
+        image: String,
     })
 );
 
