@@ -44,6 +44,7 @@ exports.getPopuler = (req, res) => {
                 res.status(500).json({ success: false, message: "Something is Wrong try again" });
                 return;
             }
+
             res.status(200).json({
                 success: true, data: data, message: "Success"
             });
@@ -72,6 +73,24 @@ exports.getRecent = (req, res) => {
         .populate("auther", "-__v")
         .populate('service', "-__v")
         .sort({ created_date: -1 })
+        .limit(15)
+        .exec((err, data) => {
+            if (err) {
+                console.log(err);
+                res.status(500).json({ success: false, message: "Something is Wrong try again" });
+                return;
+            }
+            res.status(200).json({
+                success: true, data: data, message: "Success"
+            });
+        });
+};
+
+
+exports.getTrending_hot = (req, res) => {
+    Product.find({ rate: { $gt: 4 } })
+        .populate("auther", "-__v")
+        .populate('service', "-__v")
         .limit(15)
         .exec((err, data) => {
             if (err) {

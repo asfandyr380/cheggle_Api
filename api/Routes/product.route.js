@@ -12,6 +12,7 @@ module.exports = function (app) {
 
     app.get('/api/product/featured', controller.getPopuler);
     app.get('/api/product/recent', controller.getRecent);
+    app.get('/api/product/hot', controller.getTrending_hot);
     app.get('/api/product/:id', controller.getProduct);
     app.post('/api/product/create', controller.create);
 };
