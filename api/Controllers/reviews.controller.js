@@ -12,7 +12,6 @@ exports.create = (req, res) => {
     });
 
     review.save().then(data => {
-
         const id = req.body.user;
         User.findByIdAndUpdate(id, { $push: { reviews: data._id } }).exec((err, user) => {
             if (err) {

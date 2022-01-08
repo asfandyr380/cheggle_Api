@@ -25,24 +25,33 @@ exports.getUser = (req, res) => {
         return;
       }
 
+      // if no user found against that Id
       if (!data) {
         res.status(404).json({ success: false, data: null, message: "No User Found!" });
-      } else {
+      }
+      else {
         var authorities = [];
         var reviews = [];
+
+        // Populate given roles
         for (let i = 0; i < data.roles.length; i++) {
           authorities.push("ROLE_" + data.roles[i].name);
         }
 
+        // Populate reviews
         for (let i = 0; i < data.reviews.length; i++) {
+
+          // User who gave the review
           var user = {
             id: data.reviews[i].user.id,
             full_name: `${data.reviews[i].user.firstname} ` + `${data.reviews[i].user.lastname}`,
             photo: data.reviews[i].user.photo,
           };
+          // review object
           var review = {
-            id: data.reviews[i]._id, user:
-              user, title: data.reviews[i].title,
+            id: data.reviews[i]._id,
+            user: user,
+            title: data.reviews[i].title,
             comment: data.reviews[i].comment,
             created_date: data.reviews[i].created_date,
             rate: data.reviews[i].rate,
@@ -51,7 +60,8 @@ exports.getUser = (req, res) => {
         }
 
         res.status(200).json({
-          success: true, data: {
+          success: true,
+          data: {
             user: {
               id: data._id,
               person: data.person,
@@ -71,16 +81,22 @@ exports.getUser = (req, res) => {
               ditrict: data.district,
               country: data.country,
               photo: data.photo,
-              roles: authorities,
-              full_name: `${data.firstname} ` + `${data.lastname}`,
-              reviews: reviews,
-              services: data.services,
               aboutUs: data.aboutUs,
-              partners: data.partners,
               facebook: data.facebook,
               twitter: data.twitter,
               instagram: data.instagram,
               linkdin: data.linkdin,
+              full_name: `${data.firstname} ` + `${data.lastname}`,
+              rate: data.rate,
+              hour: data.hour,
+              roles: authorities,
+              services: data.services,
+              partners: data.partners,
+              reviews: reviews,
+              location: data.location,
+              hour_details: data.hour_details,
+              pricing_list: data.pricing_list,
+              menu_list: data.menu_list,
             },
           }, message: "Found User Success"
         });
@@ -213,7 +229,19 @@ exports.addRole = (req, res) => {
 exports.updateProfileSetup = (req, res) => {
   const body = req.body;
   const id = req.params.id;
-  User.findByIdAndUpdate(id, { services: body.services, aboutUs: body.aboutUs, partners: body.partners }).exec((err, data) => {
+  User.findByIdAndUpdate(id, {
+    services: body.services,
+    aboutUs: body.aboutUs,
+    partners: body.partners,
+    facebook: body.facebook,
+    instagram: body.instagram,
+    twitter: body.instagram,
+    linkdin: body.linkdin,
+    location: body.location,
+    hour_details: body.hour_details,
+    pricing_list: body.pricing_list,
+    menu_list: body.menu_list,
+  }).exec((err, data) => {
     if (err) {
       return res.status(500).json({ success: false, message: err });
     }

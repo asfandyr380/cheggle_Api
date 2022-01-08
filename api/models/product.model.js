@@ -7,48 +7,21 @@ const Product = mongoose.model(
         subtitle: String,
         image: String,
         featured: Boolean,
-        rate: Number,
-        created_date: {
-            type: Date,
-            default: Date.now
-        },
-        num_rate: Number,
-        rate_text: String,
-        status: String,
-        favorite: Boolean,
-        address: String,
-        phone: String,
-        email: String,
-        website: String,
-        hour: String,
-        description: String,
-        price_range: String,
         auther: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         },
-        hour_detail: [
-            {
-                title: String,
-                time: String,
-            }
-        ],
+        created_date: {
+            type: Date,
+            default: Date.now
+        },
+        favorite: Boolean,
+        description: String,
         photo: [
             {
                 image: String
             }
         ],
-        service: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                'ref': "Services"
-            }
-        ],
-        location: {
-            name: String,
-            lat: Number,
-            long: Number,
-        },
     })
 );
 

@@ -14,7 +14,9 @@ db.reviews = require('./reviews.model');
 db.partners = require('./partners.model');
 db.banners = require('./banners.model');
 db.categories = require('./category.model');
-
+db.business = require('./business.model').Business;
+db.businessType = require('./business.model').BusinessType;
+db.appPackages = require('./app_packages.model');
 
 db.ROLES = ["user", "admin", "moderator"];
 

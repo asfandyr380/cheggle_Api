@@ -8,23 +8,10 @@ exports.create = (req, res) => {
         subtitle: req.body.subtitle,
         image: req.body.image,
         featured: req.body.featured,
-        rate: req.body.rate,
-        num_rate: req.body.num_rate,
-        rate_text: req.body.rate_text,
-        status: req.body.status,
         favorite: req.body.favorite,
-        address: req.body.address,
-        phone: req.body.phone,
-        email: req.body.email,
-        website: req.body.website,
-        hour: req.body.hour,
         description: req.body.description,
-        price_range: req.body.price_range,
-        auther: req.body.auther_Id,
-        hour_detail: req.body.hour_details,
         photo: req.body.photos,
-        service: req.body.service_Ids,
-        location: req.body.location,
+        auther: req.body.userId
     });
 
     product.save(product).then(data => {
@@ -37,16 +24,41 @@ exports.create = (req, res) => {
 exports.getPopuler = (req, res) => {
     Product.find({ featured: true })
         .populate("auther", "-__v")
-        .populate('service', "-__v")
         .exec((err, data) => {
             if (err) {
                 console.log(err);
                 res.status(500).json({ success: false, message: "Something is Wrong try again" });
                 return;
             }
-
+            var d = [];
+            for (let i = 0; i < data.length; i++) {
+                var dd = {
+                    _id: data[i]._id,
+                    title: data[i].title,
+                    subtitle: data[i].subtitle,
+                    image: data[i].image,
+                    featured: data[i].featured,
+                    favourite: data[i].favourite,
+                    description: data[i].description,
+                    photo: data[i].photo,
+                    created_date: data[i].created_date,
+                    auther_Id: data[i].auther._id,
+                    phone: data[i].auther.phone,
+                    email: data[i].auther.email,
+                    address: data[i].auther.street,
+                    facebook: data[i].auther.facebook,
+                    instagram: data[i].auther.instagram,
+                    linkdin: data[i].auther.linkdin,
+                    twitter: data[i].auther.twitter,
+                    rate: data[i].auther.rate,
+                    num_rate: data[i].auther.num_rate,
+                };
+                d.push(dd);
+            }
             res.status(200).json({
-                success: true, data: data, message: "Success"
+                success: true,
+                data: d,
+                message: "Success",
             });
         });
 };
@@ -55,15 +67,41 @@ exports.getProduct = (req, res) => {
     const id = req.params.id;
     Product.findById(id)
         .populate("auther", "-__v")
-        .populate('service', "-__v")
         .exec((err, data) => {
             if (err) {
                 console.log(err);
                 res.status(500).json({ success: false, message: "Something is Wrong try again" });
                 return;
             }
+            var d = [];
+            for (let i = 0; i < data.length; i++) {
+                var dd = {
+                    _id: data[i]._id,
+                    title: data[i].title,
+                    subtitle: data[i].subtitle,
+                    image: data[i].image,
+                    featured: data[i].featured,
+                    favourite: data[i].favourite,
+                    description: data[i].description,
+                    photo: data[i].photo,
+                    created_date: data[i].created_date,
+                    auther_Id: data[i].auther._id,
+                    phone: data[i].auther.phone,
+                    email: data[i].auther.email,
+                    address: data[i].auther.street,
+                    facebook: data[i].auther.facebook,
+                    instagram: data[i].auther.instagram,
+                    linkdin: data[i].auther.linkdin,
+                    twitter: data[i].auther.twitter,
+                    rate: data[i].auther.rate,
+                    num_rate: data[i].auther.num_rate,
+                };
+                d.push(dd);
+            }
             res.status(200).json({
-                success: true, data: data, message: "Success"
+                success: true,
+                data: d,
+                message: "Success",
             });
         });
 };
@@ -71,7 +109,6 @@ exports.getProduct = (req, res) => {
 exports.getRecent = (req, res) => {
     Product.find()
         .populate("auther", "-__v")
-        .populate('service', "-__v")
         .sort({ created_date: -1 })
         .limit(15)
         .exec((err, data) => {
@@ -80,8 +117,35 @@ exports.getRecent = (req, res) => {
                 res.status(500).json({ success: false, message: "Something is Wrong try again" });
                 return;
             }
+            var d = [];
+            for (let i = 0; i < data.length; i++) {
+                var dd = {
+                    _id: data[i]._id,
+                    title: data[i].title,
+                    subtitle: data[i].subtitle,
+                    image: data[i].image,
+                    featured: data[i].featured,
+                    favourite: data[i].favourite,
+                    description: data[i].description,
+                    photo: data[i].photo,
+                    created_date: data[i].created_date,
+                    auther_Id: data[i].auther._id,
+                    phone: data[i].auther.phone,
+                    email: data[i].auther.email,
+                    address: data[i].auther.street,
+                    facebook: data[i].auther.facebook,
+                    instagram: data[i].auther.instagram,
+                    linkdin: data[i].auther.linkdin,
+                    twitter: data[i].auther.twitter,
+                    rate: data[i].auther.rate,
+                    num_rate: data[i].auther.num_rate,
+                };
+                d.push(dd);
+            }
             res.status(200).json({
-                success: true, data: data, message: "Success"
+                success: true,
+                data: d,
+                message: "Success",
             });
         });
 };
@@ -90,8 +154,7 @@ exports.getRecent = (req, res) => {
 exports.getTrending_hot = (req, res) => {
     Product.find()
         .where('rate').gt(4)
-        .populate("auther", "-__v")
-        .populate('service', "-__v")
+        .populate("auther", "-__v")     
         .limit(15)
         .exec((err, data) => {
             if (err) {
@@ -99,8 +162,35 @@ exports.getTrending_hot = (req, res) => {
                 res.status(500).json({ success: false, message: "Something is Wrong try again" });
                 return;
             }
+            var d = [];
+            for (let i = 0; i < data.length; i++) {
+                var dd = {
+                    _id: data[i]._id,
+                    title: data[i].title,
+                    subtitle: data[i].subtitle,
+                    image: data[i].image,
+                    featured: data[i].featured,
+                    favourite: data[i].favourite,
+                    description: data[i].description,
+                    photo: data[i].photo,
+                    created_date: data[i].created_date,
+                    auther_Id: data[i].auther._id,
+                    phone: data[i].auther.phone,
+                    email: data[i].auther.email,
+                    address: data[i].auther.street,
+                    facebook: data[i].auther.facebook,
+                    instagram: data[i].auther.instagram,
+                    linkdin: data[i].auther.linkdin,
+                    twitter: data[i].auther.twitter,
+                    rate: data[i].auther.rate,
+                    num_rate: data[i].auther.num_rate,
+                };
+                d.push(dd);
+            }
             res.status(200).json({
-                success: true, data: data, message: "Success"
+                success: true,
+                data: d,
+                message: "Success",
             });
         });
 };

@@ -18,6 +18,8 @@ exports.signup = (req, res) => {
         fax: req.body.fax,
         mobile: req.body.mobile,
         website: req.body.website,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 8),
         companyName: req.body.company,
         b1: req.body.b1,
         b2: req.body.b2,
@@ -27,26 +29,32 @@ exports.signup = (req, res) => {
         city: req.body.city,
         district: req.body.district,
         country: req.body.country,
-        email: req.body.email,
+        photo: req.body.photo === undefined ? 'user_icon.png': req.body.photo,
+        aboutUs: req.body.aboutUs === undefined ? "" : req.body.aboutUs,
+        facebook: req.body.facebook === undefined ? "" : req.body.facebook,
+        twitter: req.body.twitter === undefined ? "" : req.body.twitter,
+        instagram: req.body.instagram === undefined ? "" : req.body.instagram,
+        linkdin: req.body.linkdin === undefined ? "" : req.body.linkdin,
+        rate: 0,
+        num_rate: 0,
+        hour: req.body.hour === undefined ? "" : req.body.hour,
         wishlist: [],
-        photo: 'user_icon.png',
-        password: bcrypt.hashSync(req.body.password, 8),
         reviews: [],
-        services: [],
-        aboutUs: "",
-        partners: [],
-        facebook: "",
-        twitter: "",
-        instagram: "",
-        linkdin: "",
+        services: req.body.services === undefined ? [] :  req.body.services,
+        partners: req.body.partners === undefined ? [] : req.body.partners,
+        location: req.body.location === undefined ? {name: "Alabama", lat: 37.774929, long: -122.419418} : req.body.location,
+        hour_details: req.body.hour_details === undefined ? [] : req.body.hour_details,
+        pricing_list: req.body.pricing_list === undefined ? [] : req.body.pricing_list,
+        menu_list: req.body.menu_list === undefined ? [] : req.body.menu_list,
     });
 
     user.save((err, user) => {
         if (err) {
-            res.status(500).send({ message: err });
+            res.status(500).send({ success: false, message: err });
             return;
         }
 
+        // If roles are given then assign those
         if (req.body.roles) {
             Role.find(
                 {
@@ -69,10 +77,12 @@ exports.signup = (req, res) => {
                     });
                 }
             );
-        } else {
+        } 
+        // if no roles are given set default
+        else {
             Role.findOne({ name: "user" }, (err, role) => {
                 if (err) {
-                    res.status(500).json({ message: err });
+                    res.status(500).json({ success: false, message: err });
                     return;
                 }
 
@@ -90,6 +100,8 @@ exports.signup = (req, res) => {
     });
 };
 
+
+
 exports.signin = (req, res) => {
     User.findOne({
         email: req.body.email
@@ -102,14 +114,15 @@ exports.signin = (req, res) => {
             }
 
             if (!user) {
-                return res.status(404).send({ message: "User Not found.", success: false });
+                return res.status(404).send({ success: false, message: "User Not found." });
             }
 
+            // Compare encrypted password
             var passwordIsValid = bcrypt.compareSync(
                 req.body.password,
                 user.password
             );
-
+            
             if (!passwordIsValid) {
                 return res.status(401).send({
                     token: null,
@@ -118,15 +131,17 @@ exports.signin = (req, res) => {
                 });
             }
 
+            // if password is Valid then assign jwt token
             var token = jwt.sign({ id: user.id }, config.secret, {
                 expiresIn: 86400 // 24 hours
             });
 
+            // Populate Roles
             var authorities = [];
-
             for (let i = 0; i < user.roles.length; i++) {
                 authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
             }
+
             res.status(200).send(
                 {
                     success: true,
@@ -143,18 +158,28 @@ exports.signin = (req, res) => {
                         company: user.companyName,
                         b1: user.b1,
                         b2: user.b2,
-                        address: user.street + user.house,
+                        address: `${user.street} ` + `${user.house}`,
                         postal: user.postal,
                         city: user.city,
                         ditrict: user.district,
                         country: user.country,
                         photo: user.photo,
-                        roles: authorities,
-                        full_name: user.firstname + user.lastname,
+                        aboutUs: user.aboutUs,
                         facebook: user.facebook,
                         twitter: user.twitter,
                         instagram: user.instagram,
                         linkdin: user.linkdin,
+                        full_name: `${user.firstname} ` + `${user.lastname}`,
+                        rate: user.rate,
+                        hour: user.hour,
+                        wishlist: user.wishlist,
+                        roles: authorities,
+                        services: user.services,
+                        partners: user.partners,
+                        // location: user.location,
+                        hour_details: user.hour_details,
+                        pricing_list: user.pricing_list,
+                        menu_list: user.menu_list,
                         token: token
                     },
                     message: 'Login Success'
@@ -162,7 +187,7 @@ exports.signin = (req, res) => {
         });
 };
 
-
+// TODO: Reset password controller
 exports.requestReset = async (req, res) => {
     const email = req.body.email;
 

@@ -22,6 +22,14 @@ const User = mongoose.model(
     district: String,
     country: String,
     photo: String,
+    aboutUs: String,
+    facebook: String,
+    twitter: String,
+    instagram: String,
+    linkdin: String,
+    num_rate: Number,
+    rate: Number,
+    hour: String,
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -41,12 +49,18 @@ const User = mongoose.model(
       }
     ],
     services: [{ type: String }],
-    aboutUs: String,
     partners: [{ type: String }],
-    facebook: String,
-    twitter: String,
-    instagram: String,
-    linkdin: String
+    location: {
+      name: String,
+      lat: Number,
+      long: Number,
+    },
+    hour_details: [{
+      title: String,
+      time: String,
+    }],
+    pricing_list: [{ title: String, name: String, services: [{ type: String }], price: Number }],
+    menu_list: [{ title: String, price: Number }],
   })
 );
 

@@ -9,8 +9,6 @@ const dbConfig = require("./config/database");
 const Role = db.role;
 const Services = db.services;
 
-
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
@@ -23,6 +21,8 @@ require('./api/Routes/partners.route')(app);
 require('./api/Routes/banners.route')(app);
 require('./api/Routes/category.route')(app);
 require('./api/Routes/reviews.route')(app);
+require('./api/Routes/businesss.route')(app);
+require('./api/Routes/app_packages.route')(app);
 
 db.mongoose
     .connect(`mongodb+srv://${dbConfig.USERNAME}:${dbConfig.PASS}@cheggle.jldec.mongodb.net/${dbConfig.DB}?retryWrites=true&w=majority`, {
