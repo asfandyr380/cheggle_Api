@@ -17,6 +17,7 @@ db.categories = require('./category.model');
 db.business = require('./business.model').Business;
 db.businessType = require('./business.model').BusinessType;
 db.appPackages = require('./app_packages.model');
+db.events = require('./events.model');
 
 db.ROLES = ["user", "admin", "moderator"];
 

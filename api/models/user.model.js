@@ -61,6 +61,7 @@ const User = mongoose.model(
     }],
     pricing_list: [{ title: String, name: String, services: [{ type: String }], price: Number }],
     menu_list: [{ title: String, price: Number }],
+    events: [{ type: mongoose.Schema.Types.ObjectId, ref: "Events" }],
   })
 );
 

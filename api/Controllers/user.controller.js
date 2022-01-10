@@ -12,6 +12,7 @@ exports.getUser = (req, res) => {
   User.findById(id)
     .populate("roles", "-__v")
     .populate("reviews", "-__v")
+    .populate("events", "-__v")
     .populate({
       path: 'reviews', populate: {
         path: 'user',
@@ -59,6 +60,15 @@ exports.getUser = (req, res) => {
           reviews.push(review);
         }
 
+        // filter event months
+        var months = [];
+        for (let i = 0; i < data.events.length; i++) {
+          const event = data.events[i];
+          months.push(event.month);
+        }
+        // remove duplicate months
+        let uniqueMonths = [...new Set(months)];
+
         res.status(200).json({
           success: true,
           data: {
@@ -97,6 +107,7 @@ exports.getUser = (req, res) => {
               hour_details: data.hour_details,
               pricing_list: data.pricing_list,
               menu_list: data.menu_list,
+              events_data: { data: data.events, months: uniqueMonths },
             },
           }, message: "Found User Success"
         });
