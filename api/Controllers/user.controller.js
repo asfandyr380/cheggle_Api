@@ -13,6 +13,7 @@ exports.getUser = (req, res) => {
     .populate("roles", "-__v")
     .populate("reviews", "-__v")
     .populate("events", "-__v")
+    .populate("job_posts", "-__v")
     .populate({
       path: 'reviews', populate: {
         path: 'user',
@@ -108,6 +109,7 @@ exports.getUser = (req, res) => {
               pricing_list: data.pricing_list,
               menu_list: data.menu_list,
               events_data: { data: data.events, months: uniqueMonths },
+              job_posts: data.job_posts,
             },
           }, message: "Found User Success"
         });

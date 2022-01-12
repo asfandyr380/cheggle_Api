@@ -24,6 +24,7 @@ require('./api/Routes/reviews.route')(app);
 require('./api/Routes/businesss.route')(app);
 require('./api/Routes/app_packages.route')(app);
 require('./api/Routes/events.route')(app);
+require('./api/Routes/jobs.route')(app);
 
 db.mongoose
     .connect(`mongodb+srv://${dbConfig.USERNAME}:${dbConfig.PASS}@cheggle.jldec.mongodb.net/${dbConfig.DB}?retryWrites=true&w=majority`, {
